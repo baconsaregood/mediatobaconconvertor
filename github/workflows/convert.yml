@@ -1,0 +1,42 @@
+name: Convert Media to .bacon
+
+on:
+  workflow_dispatch:
+    inputs:
+      file:
+        description: 'Media file to convert'
+        required: true
+        type: artifact
+
+jobs:
+  convert:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup ffmpeg
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg
+
+      - name: Upload Media File
+        uses: actions/upload-artifact@v3
+        with:
+          name: media-file
+          path: ${{ github.event.inputs.file.path }}
+
+      - name: Convert Media to .bacon
+        run: |
+          input_file="${{ github.event.inputs.file.path }}"
+          output_file="converted.bacon"
+
+        
+          ffmpeg -i "$input_file" -b:v 500k "$output_file"
+
+         
+          curl -X POST \
+            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Accept: application/vnd.github.v3+json" \
+            -F "file=@$output_file" \
+            "https://uploads.github.com/repos/${{ github.repository }}/releases/latest/assets?name=$output_file"
