@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Media File</title>
+</head>
+<body>
+    <h1>Upload Media File for Conversion</h1>
+    <form action="https://github.com/baconsaregood/mediatobaconconvertor/actions" method="post" enctype="multipart/form-data">
+        <input type="file" name="file" accept=".mp4, .mp3" required>
+        <button type="submit">Convert to .bacon</button>
+    </form>
+</body>
+</html>
